@@ -9,6 +9,7 @@
 </head>
 <body>
 	<c:if test="${ not empty list }">
+	
 	<ul>
 		<c:forEach var="country" items="${ list }">
 				<li>${ country.name } : ${ country.population }</li>
@@ -23,6 +24,7 @@
 			<a href="${ url }">[${ page }]</a>
 		</c:forEach>
 	</nav>
+	
 	</c:if>
 </body>
 </html>

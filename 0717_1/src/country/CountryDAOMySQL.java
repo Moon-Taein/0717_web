@@ -3,9 +3,10 @@ package country;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Scalar.String;
 
 import dbutil.DBUtil;
 
@@ -13,6 +14,31 @@ public class CountryDAOMySQL implements CountryDAO {
 
 	public CountryDAOMySQL() {
 	};
+
+	@Override
+	public int countAll() {
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery("SELECT Count(*) AS cnt FROM country");
+
+			while (rs.next()) {
+				return rs.getInt("cnt");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return -1;
+	}
 
 	@Override
 	public List<Country> getAll() {
