@@ -1,3 +1,5 @@
+<%@page import="country.CountryDTO"%>
+<%@page import="country.CountryService"%>
 <%@page import="country.CountryDAOMySQL"%>
 <%@page import="country.Country"%>
 <%@page import="java.util.List"%>
@@ -13,17 +15,13 @@
 	try{
 		String pageStr = request.getParameter("page");
 		Integer pageNum = pageStr == null? 1 : Integer.valueOf(pageStr);
+		final int pagePer = 10;
 		
-		CountryDAOMySQL countryList = new CountryDAOMySQL();
-		List<Country> list = countryList.getByPage(pageNum, 10);
-		request.setAttribute("list", list);
-		
-		// 총 리스트의 길이를 알아야함;
-		int wholeNumbers = countryList.getWholePagesNumber();
-		int wholePages = (wholeNumbers/10); ;
-		wholePages += wholeNumbers % 10 == 0 ? 0 : 1;
-		request.setAttribute("wholePages", wholePages);
-	
+		CountryService service = new CountryService();
+		CountryDTO dto = service.getPage(pageNum, pagePer);
+			
+		request.setAttribute("list", dto.getList());
+		request.setAttribute("wholePages", dto.getTotalPage());
 		request.getRequestDispatcher("/WEB-INF/countryView.jsp").forward(request, response);
 		
 	} catch (Exception e){
